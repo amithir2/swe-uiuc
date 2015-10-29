@@ -13,7 +13,7 @@ def extract_address(students):
 	addresses = []
 	for student in students:
 		addresses.append(student['address'])
-	return majors
+	return addresses
 
 def filters(results):
 	final_results = []
@@ -22,6 +22,8 @@ def filters(results):
 			continue
 		if 'student_level_description' not in result:
 			continue
+		if 'address' not in result:
+			result['address'] = None
 	#	if 'undergrad' not in result['student_level_description']:
 	#		continue
 		final_results.append(result)
