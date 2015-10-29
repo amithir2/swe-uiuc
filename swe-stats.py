@@ -98,8 +98,10 @@ def get_majors(students):
 
 def get_addresses(students):
 	addresses = extract_address(students)
-	for address in addresses:
-		print address
+	with open('addresses.txt', 'wb') as f:
+		for address in addresses:
+			f.write(str(address))
+			f.write('\n')
 
 def get_statistics(filename):
 	names = parseMembers(filename)
