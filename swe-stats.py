@@ -16,8 +16,8 @@ def filters(results):
 			continue
 		if 'student_level_description' not in result:
 			continue
-		if 'undergrad' not in result['student_level_description']:
-			continue
+	#	if 'undergrad' not in result['student_level_description']:
+	#		continue
 		final_results.append(result)
 	if len(final_results) < 1:
 		return {'student_major_name': None}
@@ -27,7 +27,7 @@ def filters(results):
 def nph_query(firstname, lastname):
 	command = ['nph', firstname, lastname]
 	process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	out, err = process.communicate()
+	out, err = process.communicate()	
 	if 'no matches to query' in out:
 		command = ['nph', lastname]
 		process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -39,7 +39,7 @@ def nph_query(firstname, lastname):
 
 def get_nph(names):
 	students = []
-	for (firstname, lastname) in names[:10]:
+	for (firstname, lastname) in names:
 		out = nph_query(firstname, lastname)
 
 		curr_index = -1
@@ -70,10 +70,10 @@ def parseMembers(filename):
 
 	names = []
 	for line in lines[1:]:
-		firstname = line[0].lower()
-		lastname = line[1].lower()
-		names.append(' '.join([firstname, lastname]))
-
+		data = line.split(',')
+		firstname = data[0].lower()
+		lastname = data[1].lower()
+		names.append([firstname, lastname])
 	return names
 
 def get_statistics(filename):
@@ -81,8 +81,11 @@ def get_statistics(filename):
 	students = get_nph(names)
 	majors = extract_major(students)
 	total = sum(majors.values())
+	sums = 0
 	for major in majors:
-		print major, float(majors[major])/total
+		sums += majors[major]
+		print major,'\t', float(majors[major])/total
+	print sums, total
 
 if __name__ == '__main__':
-	get_majors('nat-mem.txt')
+	get_statistics('nat-mem.txt')
