@@ -39,7 +39,7 @@ def nph_query(firstname, lastname):
 
 def get_nph(names):
 	students = []
-	for (firstname, lastname) in names:
+	for (firstname, lastname) in names[:10]:
 		out = nph_query(firstname, lastname)
 
 		curr_index = -1
@@ -79,7 +79,7 @@ def parseMembers(filename):
 def get_statistics(filename):
 	names = parseMembers(filename)
 	students = get_nph(names)
-	majors = get_majors(students)
+	majors = extract_major(students)
 	total = sum(majors.values())
 	for major in majors:
 		print major, float(majors[major])/total
