@@ -1,34 +1,26 @@
 import subprocess
 import os
 from collections import defaultdict
-
-def extract_major(students):
-	majors = defaultdict(int)
-	for student in students:
-		major = student['student_major_name']
-		majors[major] += 1
-	return majors
-
-def extract_address(students):
-	addresses = []
-	for student in students:
-		addresses.append(student['address'])
-	return addresses
+MAJOR = 'student_major_name'
+ADDRESS = 'address'
+LEVEL = 'student_level_description'
+KEYS = [ MAJOR, ADDRESS, LEVEL]
 
 def filters(results):
 	final_results = []
 	for result in results:
-		if 'student_major_name' not in result: 
+		if MAJOR not in result: 
 			continue
-		if 'student_level_description' not in result:
+		if LEVEL not in result:
 			continue
-		if 'address' not in result:
-			result['address'] = None
-	#	if 'undergrad' not in result['student_level_description']:
-	#		continue
+		if ADDRESS not in result:
+			result[ADDRESS] = None
 		final_results.append(result)
 	if len(final_results) < 1:
-		return {'student_major_name': None, 'address': None}
+		d = {}
+		for key in KEYS:
+			d[key] = None
+		return d
 	else:
 		return final_results[-1]
 
@@ -90,6 +82,26 @@ def parseMembers(filename):
 		names.append([firstname, lastname])
 	return names
 
+def extract_major(students):
+	majors = defaultdict(int)
+	for student in students:
+		major = student[MAJOR]
+		majors[major] += 1
+	return majors
+
+def extract_student_level(students):
+	student_levels = defaultdict(int)
+	for student in students:
+		student_level = student[LEVEL]
+		student_levels[student_level] += 1
+	return student_levels
+
+def extract_address(students):
+	addresses = []
+	for student in students:
+		addresses.append(student[ADDRESS])
+	return addresses
+
 def get_majors(students):
 	majors = extract_major(students)
 	total = sum(majors.values())
@@ -103,11 +115,19 @@ def get_addresses(students):
 			f.write(str(address))
 			f.write('\n')
 
+def get_student_level(students):
+	student_levels = extract_student_level(students)
+	total = sum(student_levels.values())
+	for student_level in student_levels:
+		print student_level,'\t', float(student_levels[student_level])/total
+
+
 def get_statistics(filename):
 	names = parseMembers(filename)
 	students = get_nph(names)
 	# get_majors(students)
-	get_addresses(students)
+	# get_addresses(students)
+	get_student_level(students)
 	
 
 if __name__ == '__main__':
