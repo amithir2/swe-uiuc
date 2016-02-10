@@ -6,21 +6,21 @@ ADDRESS = 'address'
 LEVEL = 'student_level_description'
 KEYS = [ MAJOR, ADDRESS, LEVEL]
 ENGR_MAJORS = [
-'Aerospace Engineering',
-'Agricultural & Biological Engr',
-'Bioengineering',
-'Chemical Engineering',
-'Civil Engineering',
-'Computer Science',
-'Computer Engineering',
-'Electrical Engineering',
-'Engineering Mechanics',
-'General Engineering',
-'Engineering Physics',
-'Industrial Engineering',
-'Mechanical Engineering',
-'Materials Science & Engr',
-'Nuclear, Plasma, Radiolgc Engr'
+'aerospace engineering',
+'agricultural & biological engr',
+'bioengineering',
+'chemical engineering',
+'civil engineering',
+'computer science',
+'computer engineering',
+'electrical engineering',
+'engineering mechanics',
+'engineering physics',
+'general engineering',
+'industrial engineering',
+'mechanical engineering',
+'materials science & engr',
+'nuclear, plasma, radiolgc engr'
 ]
 
 def find_engineers(results):
