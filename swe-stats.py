@@ -5,6 +5,19 @@ MAJOR = 'student_major_name'
 ADDRESS = 'address'
 LEVEL = 'student_level_description'
 KEYS = [ MAJOR, ADDRESS, LEVEL]
+ENGR_MAJORS = []
+
+def find_engineers(results):
+	final_results = []
+	for result in results:
+		if result[MAJOR] in ENGR_MAJORS:
+			final_results.append(result)
+	# everyone got filtered out
+	if len(final_results) < 1:
+		return results
+	# returning all engineers
+	else:
+		return final_results 
 
 def filters(results):
 	final_results = []
@@ -16,12 +29,15 @@ def filters(results):
 		if ADDRESS not in result:
 			result[ADDRESS] = None
 		final_results.append(result)
+	# everyone got filtered out
 	if len(final_results) < 1:
 		d = {}
 		for key in KEYS:
 			d[key] = None
 		return d
+	# returning the most recent individual
 	else:
+		final_results = find_engineers(final_results)
 		return final_results[-1]
 
 def nph_query(firstname, lastname):
@@ -41,7 +57,6 @@ def get_nph(names):
 	students = []
 	for (firstname, lastname) in names:
 		out = nph_query(firstname, lastname)
-
 		curr_index = -1
 		results = []
 		prev_key = ''
@@ -131,4 +146,4 @@ def get_statistics(filename):
 	
 
 if __name__ == '__main__':
-	get_statistics('nat-mem.txt')
+	get_statistics('temp.txt')
