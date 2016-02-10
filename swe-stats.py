@@ -77,8 +77,8 @@ def parseMembers(filename):
 	names = []
 	for line in lines[1:]:
 		data = line.split(',')
-		firstname = data[0].lower()
-		lastname = data[1].lower()
+		firstname = data[0].lower().strip()
+		lastname = data[1].lower().strip()
 		names.append([firstname, lastname])
 	return names
 
