@@ -125,8 +125,8 @@ def get_student_level(students):
 def get_statistics(filename):
 	names = parseMembers(filename)
 	students = get_nph(names)
-	# get_majors(students)
-	# get_addresses(students)
+	get_majors(students)
+	get_addresses(students)
 	get_student_level(students)
 	
 
