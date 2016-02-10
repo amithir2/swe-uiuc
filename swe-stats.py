@@ -75,7 +75,7 @@ def get_nph(names):
 		out = nph_query(firstname, lastname)
 		curr_index = -1
 		results = []
-		prev_key = ''
+		prev_key = None
 		for line in out:
 			if 'entry' in line:
 				curr_index += 1
@@ -88,7 +88,7 @@ def get_nph(names):
 				if len(text) < 2: continue
 				key = text[0].strip()
 				value = text[1].strip()
-				if len(key) == 0:
+				if len(key) == 0 and prev_key != None:
 					key = prev_key
 					results[curr_index][key] += (' ' + value)
 				else:
