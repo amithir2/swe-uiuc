@@ -2,9 +2,10 @@ import subprocess
 import os
 from collections import defaultdict
 MAJOR = 'student_major_name'
+MAJOR2 = 'department'
 ADDRESS = 'address'
 LEVEL = 'student_level_description'
-KEYS = [ MAJOR, ADDRESS, LEVEL]
+KEYS = [ MAJOR, MAJOR2, ADDRESS, LEVEL]
 ENGR_MAJORS = [
 'aerospace engineering',
 'agricultural & biological engr',
@@ -26,7 +27,10 @@ ENGR_MAJORS = [
 def find_engineers(results):
 	final_results = []
 	for result in results:
-		if result[MAJOR] in ENGR_MAJORS:
+		MAJOR_KEY = MAJOR
+		if MAJOR_KEY not in result:
+			MAJOR_KEY = MAJOR2
+		if result[MAJOR_KEY] in ENGR_MAJORS:
 			final_results.append(result)
 	# everyone got filtered out
 	if len(final_results) < 1:
@@ -38,13 +42,16 @@ def find_engineers(results):
 def filters(results):
 	final_results = []
 	for result in results:
-		if MAJOR not in result: 
+		if MAJOR not in result and MAJOR2 not in result: 
 			continue
-		if LEVEL not in result:
-			continue
+		#if LEVEL not in result:
+		#	continue
 		if ADDRESS not in result:
 			result[ADDRESS] = None
 		final_results.append(result)
+
+	for each in results:
+		print each
 	# everyone got filtered out
 	if len(final_results) < 1:
 		d = {}
@@ -57,11 +64,12 @@ def filters(results):
 		return final_results[-1]
 
 def nph_query(firstname, lastname):
-	command = ['nph', firstname, lastname]
+	command = ['./nph', '-s', 'webapps.cs.uiuc.edu', firstname, lastname]
+	# print command
 	process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	out, err = process.communicate()	
 	if 'no matches to query' in out:
-		command = ['nph', lastname]
+		command = ['./nph', '-s', 'webapps.cs.uiuc.edu', lastname]
 		process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		out, err = process.communicate()
 
@@ -77,7 +85,7 @@ def get_nph(names):
 		results = []
 		prev_key = None
 		for line in out:
-			if 'entry' in line:
+			if 'entry #' in line:
 				curr_index += 1
 				results.append({})
 				continue
@@ -88,7 +96,7 @@ def get_nph(names):
 				if len(text) < 2: continue
 				key = text[0].strip()
 				value = text[1].strip()
-				if len(key) == 0 and prev_key != None:
+				if len(key) == 0:
 					key = prev_key
 					results[curr_index][key] += (' ' + value)
 				else:
@@ -116,15 +124,21 @@ def parseMembers(filename):
 def extract_major(students):
 	majors = defaultdict(int)
 	for student in students:
-		major = student[MAJOR]
+		MAJOR_KEY = MAJOR
+		if MAJOR not in student:
+			MAJOR_KEY = MAJOR2
+		major = student[MAJOR_KEY]
 		majors[major] += 1
 	return majors
 
 def extract_student_level(students):
 	student_levels = defaultdict(int)
 	for student in students:
-		student_level = student[LEVEL]
-		student_levels[student_level] += 1
+		if LEVEL not in student:
+			student_levels['GRADUATED'] += 1
+		else:
+			student_level = student[LEVEL]
+			student_levels[student_level] += 1
 	return student_levels
 
 def extract_address(students):
@@ -163,3 +177,4 @@ def get_statistics(filename):
 
 if __name__ == '__main__':
 	get_statistics('temp.txt')
+	# get_statistics('nat-mem.txt')
